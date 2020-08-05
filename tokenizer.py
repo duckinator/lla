@@ -1,3 +1,20 @@
+"""
+Provides a `tokenize(code)` function which returns a collection of tokens.
+
+It should follow this truth table, where "ws" means "whitespace" and an
+empty CHAR column means "everything not handled elsewhere."
+
+CHAR || INVERT | IDENTIFIER | OPERATOR | AND | OR | OPEN_PAREN | CLOSE_PAREN
+============================================================================
+ws   || 0      | 0          | 0        | 0   | 0  | 0          | 0
+ &   || 0      | 0          | 1        | 1   | 0  | 0          | 0
+ |   || 0      | 0          | 1        | 0   | 1  | 0          | 0
+ (   || 0      | 0          | 1        | 0   | 0  | 1          | 0
+ )   || 0      | 0          | 1        | 0   | 0  | 0          | 1
+ !   || 1      | 1          | 1        | 0   | 0  | 0          | 1
+     || 0      | 1          | 0        | 0   | 0  | 0          | 0
+"""
+
 from enum import Enum
 import string
 
