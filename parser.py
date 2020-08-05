@@ -11,22 +11,25 @@ class Program:
         return f"{self.right}"
 
     def __repr__(self):
-        return f"<Program code={str(self)!r}>"
+        return f"<Program code={self.right!r}>"
 
 
 class Parens:
     def __init__(self):
-        self.left = None
         self.right = None
 
     def __str__(self):
         return f'({self.right})'
 
+    def __repr__(self):
+        return f'Parens({self.right!r})'
 
 
 class Operator:
-    def __init__(self, operator, right):
-        self.left = None
+    symbol = "UNKNOWN_OPERATOR"
+
+    def __init__(self, left=None, operator=None, right=None):
+        self.left = left
         self.right = right
         self.operator = operator
 
@@ -36,15 +39,18 @@ class Operator:
         self.operator_type = operator.operator_type
 
     def __str__(self):
-        return f"{str(self.left)} {self.__class__.__name__.upper()} {str(self.right)}"
+        return f"{str(self.left)} {self.symbol} {str(self.right)}"
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}({self.left!r}, {self.right!r})'
 
 
 class And(Operator):
-    pass
+    symbol = '&'
 
 
 class Or(Operator):
-    pass
+    symbol = '|'
 
 
 def nest_parens(orig_tokens):
@@ -81,27 +87,29 @@ def parse(orig_tokens, toplevel_class=None):
     """Given a series of tokens, return a parse tree."""
     tokens = nest_parens(orig_tokens)
 
+    #from pprint import pprint
+    #pprint(tokens)
+
     if toplevel_class is None:
         toplevel_class = Program
 
     toplevel = toplevel_class()
-    last = None
+    parent = toplevel
     while tokens:
-        if last is None:
-            last = toplevel
-            left, *tokens = tokens
-        else:
-            left = None
-        operator, right, *tokens = tokens
+        left = tokens.pop(0)
+        operator = tokens.pop(0)
 
-        if isinstance(right, list):
-            right = parse(right, Parens)
+        if isinstance(left, list):
+            left = parse(left, Parens)
 
-        current = OPERATOR_MAP[operator.operator_type](operator, right)
+        current = OPERATOR_MAP[operator.operator_type](left, operator)
 
-        if left:
-            current.left = left
+        if len(tokens) == 1:
+            right = tokens.pop(0)
+            if isinstance(right, list):
+                right = parse(right, Parens)
+            current.right = right
 
-        last.right = current
-        last = current
+        parent.right = current
+        parent = current
     return toplevel

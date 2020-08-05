@@ -27,12 +27,13 @@ class Interpreter:
         self.tree = parse(tokenize(code))
 
     def run(self):
-        print(self.tokens)
+        print(self.tree)
 
 
 
 def main():
     programs = [
+        #"!website_up | (!search & (!elasticsearch.http | !elasticsearch.process))",
         "!website_up | !search & (!elasticsearch.http | !elasticsearch.process)",
         "!website_up & !search & ssh & search.local & elasticsearch.http & elasticsearch.process",
         "!website_up & !search & !ssh",
@@ -44,6 +45,11 @@ def main():
     for program in programs:
         tokens = tokenize(program)
         parse_tree = parse(tokens)
+        if str(parse_tree) != program:
+            print(program)
+            print("!=")
+            print(parse_tree)
+            exit(1)
         print(parse_tree)
         #Interpreter(tokens).run()
 
