@@ -49,58 +49,69 @@ class Token:
             return self.value
 
     def __repr__(self):
-        return f"<Token type={self.type.name} value={self.value!r} negated={self.negated} operator_type={self.operator_type.name}>"
+        if self.type == TokenType.OPERATOR:
+            return f"<Token OPERATOR {self.operator_type.name}>"
+        elif self.type == TokenType.IDENTIFIER:
+            if self.negated:
+                negated_symbol = '!'
+            else:
+                negated_symbol = ''
+            return f"<Token IDENTIFIER {(negated_symbol + self.value)!r}>"
+        else:
+            return f"<Token type={self.type.name} value={self.value!r} negated={self.negated} operator_type={self.operator_type.name}>"
 
 
 def tokenize(code):
     """Given code, returns a sequence of Tokens."""
-    whitespace = string.whitespace
-    identifier_tokens = string.ascii_letters + string.digits + '.-'
-    operator_tokens = {
-        '&': OperatorType.AND,
-        '|': OperatorType.OR,
-        '(': OperatorType.OPEN_PAREN,
-        ')': OperatorType.CLOSE_PAREN,
-    }
-
     tokens = []
     token = Token()
     for c in code:  # pylint: disable=invalid-name
-        if c in whitespace:
-            # We reached the end of a token. Append it, and create a new one.
-            tokens.append(token)
-            token = Token()
+        is_whitespace = c in string.whitespace
+        is_and    = (c == '&')
+        is_or     = (c == '|')
+        is_oparen = (c == '(')
+        is_cparen = (c == ')')
+        is_invert = (c == '!')
+        is_ident  = not (is_whitespace or is_and or is_or or is_oparen or is_cparen)
+        is_operator = is_and or is_or or is_oparen or is_cparen
+
+        end_token_before = is_cparen or is_whitespace
+        end_token_after = is_operator
+
+        if end_token_before:
+            if token.type != TokenType.UNINITIALIZED:
+                tokens.append(token)
+                token = Token()
+
+        if is_whitespace:
             continue
 
-        if token.type == TokenType.UNINITIALIZED:
-            # This means we're either at the beginning
-            if c == '!':
-                token.type = TokenType.IDENTIFIER
-                token.negated = True
-                continue
-            elif c in identifier_tokens:
-                token.type = TokenType.IDENTIFIER
-            elif c in operator_tokens.keys():
-                token.type = TokenType.OPERATOR
+        if is_ident or is_invert:
+            token.type = TokenType.IDENTIFIER
 
-        # If it's a right parenthesis, it's allowed to touch adjacent things,
-        # so make it its own token.
-        if c == ')' and token.type == TokenType.IDENTIFIER:
-            tokens.append(token)
-            token = Token()
+        if is_invert:
+            token.negated = is_invert
+
+        if is_operator:
             token.type = TokenType.OPERATOR
 
-        token.value += c
+        if is_and:
+            token.operator_type = OperatorType.AND
+        if is_or:
+            token.operator_type = OperatorType.OR
+        if is_oparen:
+            token.operator_type = OperatorType.OPEN_PAREN
+        if is_cparen:
+            token.operator_type = OperatorType.CLOSE_PAREN
 
-        if token.type == TokenType.OPERATOR:
-            token.operator_type = operator_tokens.get(token.value, None)
+        if not is_invert:
+            token.value += c
 
-        # If it's an left parenthesis, it's allowed to touch adjacent things.
-        if c == '(':
+        if end_token_after:
             tokens.append(token)
             token = Token()
 
-    # Add the final token.
-    tokens.append(token)
+    if token.type != TokenType.UNINITIALIZED:
+        tokens.append(token)
 
     return tokens
