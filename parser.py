@@ -53,27 +53,30 @@ class Or(Operator):
     symbol = '|'
 
 
-def nest_parens(orig_tokens):
-    """Given a list of tokens, put parenthesized sections into nested lists."""
+def _nest_parens(orig_tokens):
+    """Main logic of nest_parens()."""
     orig_tokens = orig_tokens.copy()
     tokens = []
-    chunk = []
-    in_chunk = False
-    for token in orig_tokens:
-        if token.operator_type == OperatorType.OPEN_PAREN:
-            in_chunk = True
-            continue
-
-        if token.operator_type == OperatorType.CLOSE_PAREN:
-            in_chunk = False
+    while orig_tokens:
+        token = orig_tokens.pop(0)
+        not_list = not isinstance(token, list)
+        if not_list and token.operator_type == OperatorType.OPEN_PAREN:
+            chunk, orig_tokens = _nest_parens(orig_tokens)
             tokens.append(chunk)
-            chunk = []
-            continue
-
-        if in_chunk:
-            chunk.append(token)
+        elif not_list and token.operator_type == OperatorType.CLOSE_PAREN:
+            return (tokens, orig_tokens)
         else:
             tokens.append(token)
+    return (tokens, orig_tokens)
+
+
+def nest_parens(orig_tokens):
+    """Given a sequence of tokens, put parenthesized sections into nested lists."""
+    tokens, remaining = _nest_parens(orig_tokens)
+    if len(remaining) > 0:
+        print(tokens)
+        print(f"Excess tokens: {', '.join(map(repr, remaining))}?")
+        exit(1)
     return tokens
 
 
@@ -86,9 +89,6 @@ OPERATOR_MAP = {
 def parse(orig_tokens, toplevel_class=None):
     """Given a series of tokens, return a parse tree."""
     tokens = nest_parens(orig_tokens)
-
-    #from pprint import pprint
-    #pprint(tokens)
 
     if toplevel_class is None:
         toplevel_class = Program

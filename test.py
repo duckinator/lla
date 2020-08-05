@@ -33,7 +33,7 @@ class Interpreter:
 
 def main():
     programs = [
-        #"!website_up | (!search & (!elasticsearch.http | !elasticsearch.process))",
+        "!website_up | (!search & (!elasticsearch.http | !elasticsearch.process))",
         "!website_up | !search & (!elasticsearch.http | !elasticsearch.process)",
         "!website_up & !search & ssh & search.local & elasticsearch.http & elasticsearch.process",
         "!website_up & !search & !ssh",
