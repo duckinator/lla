@@ -14,17 +14,12 @@ character       ||  NEGATE_NEXT | IDENTIFIER | OPERATOR
 [a-zA-Z0-9.-]+
 """
 
-from pprint import pprint
-
-from tokenizer import tokenize
 from parser import parse
-
-
 
 
 class Interpreter:
     def __init__(self, code, variables):
-        self.tree = parse(tokenize(code))
+        self.tree = parse(code)
 
     def run(self):
         print(self.tree)
@@ -39,17 +34,11 @@ def main():
         '!website_up & !search & !ssh',
         '!website_up & !search & ssh & !elasticsearch.process',
         '!website_up & !search & ssh & !elasticsearch.http & elasticsearch.process',
-        'website_up & !search',
+        'website_up    &    !search',
     ]
 
     for program in programs:
-        tokens = tokenize(program)
-        parse_tree = parse(tokens)
-        if str(parse_tree) != program:
-            print(program)
-            print('!=')
-            print(parse_tree)
-            exit(1)
+        parse_tree = parse(program)
         print(parse_tree)
         #Interpreter(tokens).run()
 

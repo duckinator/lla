@@ -1,6 +1,6 @@
-from textwrap import indent
+import re
 
-from tokenizer import TokenType, OperatorType
+from tokenizer import tokenize, TokenType, OperatorType
 
 
 class Program:
@@ -84,7 +84,7 @@ OPERATOR_MAP = {
 }
 
 
-def parse(orig_tokens, toplevel_class=None):
+def parse_tokens(orig_tokens, toplevel_class=None):
     """Given a series of tokens, return a parse tree."""
     tokens = nest_parens(orig_tokens)
 
@@ -98,16 +98,25 @@ def parse(orig_tokens, toplevel_class=None):
         operator = tokens.pop(0)
 
         if isinstance(left, list):
-            left = parse(left, Parens)
+            left = parse_tokens(left, Parens)
 
         current = OPERATOR_MAP[operator.operator_type](left, operator)
 
         if len(tokens) == 1:
             right = tokens.pop(0)
             if isinstance(right, list):
-                right = parse(right, Parens)
+                right = parse_tokens(right, Parens)
             current.right = right
 
         parent.right = current
         parent = current
     return toplevel
+
+
+def parse(code):
+    code = re.sub(r'\s+', ' ', code)
+    tokens = tokenize(code)
+    tree = parse_tokens(tokens)
+    if str(tree) != code:
+        raise Exception(f'{str(tree)!r} != {code!r}')
+    return tree
