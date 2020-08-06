@@ -74,9 +74,7 @@ def nest_parens(orig_tokens):
     """Given a sequence of tokens, put parenthesized sections into nested lists."""
     tokens, remaining = _nest_parens(orig_tokens)
     if len(remaining) > 0:
-        print(tokens)
-        print(f"Excess tokens: {', '.join(map(repr, remaining))}?")
-        exit(1)
+        raise Exception(f'Excess tokens: {", ".join(map(repr, remaining))}')
     return tokens
 
 
