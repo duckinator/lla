@@ -18,24 +18,37 @@ from interpreter import Interpreter
 
 
 def main():
-    print(Interpreter('website_up & !search', {'website_up': True, 'search': False}).run().result)
+    variables = {}
+    interpreter = Interpreter(variables)
 
-    return
+    variables['ssh'] = True
+    variables['website_up'] = True
+    variables['search'] = False
+    variables['search.local'] = False
+    variables['elasticsearch.http'] = False
+    variables['elasticsearch.process'] = True
 
-    programs = [
-        '!website_up | (!search & (!elasticsearch.http | !elasticsearch.process))',
-        '!website_up | !search & (!elasticsearch.http | !elasticsearch.process)',
-        '!website_up & !search & ssh & search.local & elasticsearch.http & elasticsearch.process',
-        '!website_up & !search & !ssh',
-        '!website_up & !search & ssh & !elasticsearch.process',
-        '!website_up & !search & ssh & !elasticsearch.http & elasticsearch.process',
-        'website_up    &    !search',
-    ]
-
-    for program in programs:
-        #parse_tree = parse(program)
-        #print(parse_tree)
-        Interpreter(program).run()
+    assert interpreter.run(
+        '(!search & (!elasticsearch.http | !elasticsearch.process)) | website_up'
+    )
+    assert interpreter.run(
+        '!website_up | !search & (!elasticsearch.http | !elasticsearch.process)'
+    )
+    assert not interpreter.run(
+        '!website_up & !search & ssh & search.local & elasticsearch.http & elasticsearch.process'
+    )
+    assert not interpreter.run(
+        '!website_up & !search & !ssh'
+    )
+    assert not interpreter.run(
+        '!website_up & !search & ssh & !elasticsearch.process'
+    )
+    assert not interpreter.run(
+        '!website_up & !search & ssh & !elasticsearch.http & elasticsearch.process'
+    )
+    assert interpreter.run(
+        'website_up    &    !search'
+    )
 
 
 if __name__ == "__main__":

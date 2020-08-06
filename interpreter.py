@@ -6,15 +6,20 @@ from parser import parse
 from tokenizer import OperatorType, TokenType
 
 
+class UnresolvableVariableException(Exception):
+    """Exception raised when a variable couldn't be resolved."""
+
+
 class Interpreter:  # pylint: disable=too-few-public-methods
     """Very basic interpreter."""
 
-    def __init__(self, code, variables):
-        self.tree = parse(code)
+    def __init__(self, variables):
         self.variables = variables
-        self.result = None
 
     def _resolve(self, var):
+        if not var.value in self.variables:
+            raise UnresolvableVariableException(var.value)
+
         value = self.variables[var.value]
         if var.negated:
             value = not value
@@ -39,9 +44,9 @@ class Interpreter:  # pylint: disable=too-few-public-methods
         if current.operator_type == OperatorType.OR:
             return current.left or current.right
 
-        raise Exception(f'Un-handled object: {current!r}')
+        raise Exception(f'Unhandled object: {current!r}')
 
-    def run(self):
+    def run(self, code):
         """Executes the code, then returns `self` for method chaining."""
-        self.result = self._run(self.tree)
-        return self
+        tree = parse(code)
+        return self._run(tree)
