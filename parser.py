@@ -8,10 +8,10 @@ class Program:
         self.right = None
 
     def __str__(self):
-        return f"{self.right}"
+        return f'{self.right}'
 
     def __repr__(self):
-        return f"<Program code={self.right!r}>"
+        return f'<Program code={self.right!r}>'
 
 
 class Parens:
@@ -26,7 +26,7 @@ class Parens:
 
 
 class Operator:
-    symbol = "UNKNOWN_OPERATOR"
+    symbol = 'UNKNOWN_OPERATOR'
 
     def __init__(self, left=None, operator=None, right=None):
         self.left = left
@@ -39,7 +39,7 @@ class Operator:
         self.operator_type = operator.operator_type
 
     def __str__(self):
-        return f"{str(self.left)} {self.symbol} {str(self.right)}"
+        return f'{str(self.left)} {self.symbol} {str(self.right)}'
 
     def __repr__(self):
         return f'{self.__class__.__name__}({self.left!r}, {self.right!r})'

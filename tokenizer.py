@@ -67,15 +67,15 @@ class Token:
 
     def __repr__(self):
         if self.type == TokenType.OPERATOR:
-            return f"<Token OPERATOR {self.operator_type.name}>"
+            return f'<Token OPERATOR {self.operator_type.name}>'
         elif self.type == TokenType.IDENTIFIER:
             if self.negated:
                 negated_symbol = '!'
             else:
                 negated_symbol = ''
-            return f"<Token IDENTIFIER {(negated_symbol + self.value)!r}>"
+            return f'<Token IDENTIFIER {(negated_symbol + self.value)!r}>'
         else:
-            return f"<Token type={self.type.name} value={self.value!r} negated={self.negated} operator_type={self.operator_type.name}>"
+            return f'<Token type={self.type.name} value={self.value!r} negated={self.negated} operator_type={self.operator_type.name}>'
 
 
 def tokenize(code):

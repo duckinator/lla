@@ -33,13 +33,13 @@ class Interpreter:
 
 def main():
     programs = [
-        "!website_up | (!search & (!elasticsearch.http | !elasticsearch.process))",
-        "!website_up | !search & (!elasticsearch.http | !elasticsearch.process)",
-        "!website_up & !search & ssh & search.local & elasticsearch.http & elasticsearch.process",
-        "!website_up & !search & !ssh",
-        "!website_up & !search & ssh & !elasticsearch.process",
-        "!website_up & !search & ssh & !elasticsearch.http & elasticsearch.process",
-        "website_up & !search",
+        '!website_up | (!search & (!elasticsearch.http | !elasticsearch.process))',
+        '!website_up | !search & (!elasticsearch.http | !elasticsearch.process)',
+        '!website_up & !search & ssh & search.local & elasticsearch.http & elasticsearch.process',
+        '!website_up & !search & !ssh',
+        '!website_up & !search & ssh & !elasticsearch.process',
+        '!website_up & !search & ssh & !elasticsearch.http & elasticsearch.process',
+        'website_up & !search',
     ]
 
     for program in programs:
@@ -47,7 +47,7 @@ def main():
         parse_tree = parse(tokens)
         if str(parse_tree) != program:
             print(program)
-            print("!=")
+            print('!=')
             print(parse_tree)
             exit(1)
         print(parse_tree)
