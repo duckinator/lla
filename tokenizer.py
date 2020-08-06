@@ -22,8 +22,9 @@ import string
 class TokenType(Enum):
     """The possible kinds of Tokens."""
     UNINITIALIZED = 0
-    IDENTIFIER = 1
-    OPERATOR = 2
+    STATEMENT = 1
+    IDENTIFIER = 2
+    OPERATOR = 3
 
 
 class OperatorType(Enum):

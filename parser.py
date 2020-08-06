@@ -6,6 +6,8 @@ from tokenizer import tokenize, TokenType, OperatorType
 class Program:
     def __init__(self):
         self.right = None
+        self.type = TokenType.STATEMENT
+        self.operator_type = OperatorType.NONE
 
     def __str__(self):
         return f'{self.right}'
@@ -17,6 +19,8 @@ class Program:
 class Parens:
     def __init__(self):
         self.right = None
+        self.type = TokenType.STATEMENT
+        self.operator_type = OperatorType.NONE
 
     def __str__(self):
         return f'({self.right})'
