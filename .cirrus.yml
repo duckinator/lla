@@ -1,0 +1,48 @@
+# Allow compute credits usage for collaborators and anything pushed to the
+# master, staging, and trying branches. (So bors can use them.)
+use_compute_credits: $CIRRUS_USER_COLLABORATOR == 'true' || $CIRRUS_BRANCH == 'master' || $CIRRUS_BRANCH == 'staging' || $CIRRUS_BRANCH == 'trying'
+
+Lint_task:
+  container:
+    image: python:3-slim
+  install_script:
+    - pip install . .[testing]
+  script:
+    - pylint --version
+    - bork run lint
+
+Test_task:
+  container:
+    matrix:
+      - image: python:3.6-slim
+      - image: python:3.7-slim
+      - image: python:3.8-slim
+  install_script:
+    - pip install . .[testing]
+  script:
+    - python3 --version
+    - bork run test
+
+# If eh/version.py is modified on the master branch, make a release.
+#Release_task:
+#  only_if: "changesInclude('eh/version.py') && $BRANCH == 'master' && $CIRRUS_CRON == ''"
+#  depends_on:
+#    - Lint
+#    - Test
+#  env:
+#    TWINE_USERNAME: "__token__"
+#    TWINE_PASSWORD: ENCRYPTED[00007524e18bea7b59efea288653efa57b1dbd235ed8af00cc325febfc9076631a2bf58ed330d8fa7ca057adb81579b0]
+#    BORK_GITHUB_TOKEN: ENCRYPTED[cc80f90b8db1cbe53aabf4f50bf73331c88ea3e1b5412bb0f7bc264bd233f23bf8df4fc2b4c41f87ec07310d63619801]
+#  container:
+#    image: python:3.8-slim
+#  install_script:
+#    - apt-get update
+#    - apt-get install -y git
+#    - pip3 install . .[testing]
+#  build_script:
+#    - bork clean
+#    - bork build
+#  test_script:
+#    - bork run test
+#  release_script:
+#    - bork release
