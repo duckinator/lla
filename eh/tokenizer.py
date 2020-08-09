@@ -42,7 +42,7 @@ class Token:
     - negated is only valid if type is IDENTIFIER.
     - operator_type is only valid if type is OPERATOR.
     """
-    def __init__(self, type=None, value=None, negated=False, operator_type=None):
+    def __init__(self, type=None, value=None, negated=False, operator_type=None): # pylint: disable=redefined-builtin
         if type is None:
             self.type = TokenType.UNINITIALIZED
         else:
@@ -76,10 +76,10 @@ class Token:
                 negated_symbol = ''
             return f'<Token IDENTIFIER {(negated_symbol + self.value)!r}>'
         else:
-            return f'<Token type={self.type.name} value={self.value!r} negated={self.negated} operator_type={self.operator_type.name}>'
+            return f'<Token type={self.type.name} value={self.value!r} ' + \
+                   f'negated={self.negated} operator_type={self.operator_type.name}>'
 
-
-def tokenize(code):
+def tokenize(code):  # pylint: disable=too-many-branches
     """Given code, returns a sequence of Tokens."""
     tokens = []
     token = Token()
@@ -110,6 +110,7 @@ def tokenize(code):
         if is_invert:
             token.negated = is_invert
 
+        # pylint: disable=redefined-variable-type
         if is_operator:
             token.type = TokenType.OPERATOR
 
@@ -121,6 +122,7 @@ def tokenize(code):
             token.operator_type = OperatorType.OPEN_PAREN
         if is_cparen:
             token.operator_type = OperatorType.CLOSE_PAREN
+        # pylint: enable=redefined-variable-type
 
         if not is_invert:
             token.value += c

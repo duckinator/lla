@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """
 1*1 = 1
 1*0 = 0
@@ -14,10 +12,10 @@ character       ||  NEGATE_NEXT | IDENTIFIER | OPERATOR
 [a-zA-Z0-9.-]+
 """
 
-from interpreter import Interpreter
+from eh.interpreter import Interpreter
 
 
-def main():
+def test_main():
     variables = {}
     interpreter = Interpreter(variables)
 
@@ -49,7 +47,3 @@ def main():
     assert interpreter.run(
         'website_up    &    !search'
     )
-
-
-if __name__ == "__main__":
-    main()
