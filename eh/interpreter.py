@@ -2,12 +2,14 @@
 A very basic interpreter.
 """
 
-from parser import parse
-from tokenizer import OperatorType, TokenType
+from .parser import parse
+from .tokenizer import OperatorType, TokenType
 
 
-class UnresolvableVariableException(Exception):
+class UndefinedVariableException(Exception):
     """Exception raised when a variable couldn't be resolved."""
+    def __init__(self, variable):
+        super().__init__(f'Undefined variable: {variable}')
 
 
 class Interpreter:  # pylint: disable=too-few-public-methods
@@ -18,7 +20,7 @@ class Interpreter:  # pylint: disable=too-few-public-methods
 
     def _resolve(self, var):
         if not var.value in self.variables:
-            raise UnresolvableVariableException(var.value)
+            raise UndefinedVariableException(var.value)
 
         value = self.variables[var.value]
         if var.negated:
@@ -47,6 +49,6 @@ class Interpreter:  # pylint: disable=too-few-public-methods
         raise Exception(f'Unhandled object: {current!r}')
 
     def run(self, code):
-        """Executes the code, then returns `self` for method chaining."""
+        """Executes the code, then returns the final boolean value."""
         tree = parse(code)
         return self._run(tree)

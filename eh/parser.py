@@ -1,6 +1,6 @@
 import re
 
-from tokenizer import tokenize, TokenType, OperatorType
+from .tokenizer import tokenize, TokenType, OperatorType
 
 
 class Program:
@@ -97,6 +97,11 @@ def parse_tokens(orig_tokens, toplevel_class=None):
 
     toplevel = toplevel_class()
     parent = toplevel
+
+    if len(tokens) == 1:
+        toplevel.right = tokens.pop(0)
+        return toplevel
+
     while tokens:
         left = tokens.pop(0)
         operator = tokens.pop(0)

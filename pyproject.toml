@@ -1,0 +1,17 @@
+[build-system]
+# Specify the required build system.
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.bork.zipapp]
+enabled = false
+
+[tool.bork.release]
+pypi = true
+github = false
+
+[tool.bork.aliases]
+# Runs *only* pylint and mypy. (Not the actual tests.)
+lint = "pytest -k 'pylint or mypy' --pylint --mypy --verbose"
+# Runs tests and pylint.
+test = "pytest --pylint --mypy --verbose"
