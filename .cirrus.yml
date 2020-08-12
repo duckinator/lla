@@ -28,9 +28,9 @@ Test_task:
     - python3 --version
     - bork run test
 
-# If eh/version.py is modified on the master branch, make a release.
+# If lla/version.py is modified on the master branch, make a release.
 #Release_task:
-#  only_if: "changesInclude('eh/version.py') && $BRANCH == 'master' && $CIRRUS_CRON == ''"
+#  only_if: "changesInclude('lla/version.py') && $BRANCH == 'master' && $CIRRUS_CRON == ''"
 #  depends_on:
 #    - Lint
 #    - Test

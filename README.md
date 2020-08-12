@@ -6,7 +6,7 @@ Interpreter for a basic logic language, inspired by two-element boolean algebra.
 
 Here's a quick demo, based on the example that prompted its creation:
 
-    >>> from eh.interpreter import Interpreter
+    >>> from lla.interpreter import Interpreter
     >>> variables = {
     ...     'ssh': True,
     ...     'website_up': True,
@@ -24,7 +24,7 @@ Here's a quick demo, based on the example that prompted its creation:
     >>> interpreter.run('undefined_variable')
     Traceback (most recent call last):
         ...
-    eh.interpreter.UndefinedVariableException: Undefined variable: undefined_variable
+    lla.interpreter.UndefinedVariableException: Undefined variable: undefined_variable
 
 ## Overview
 

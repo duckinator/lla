@@ -12,7 +12,7 @@ character       ||  NEGATE_NEXT | IDENTIFIER | OPERATOR
 [a-zA-Z0-9.-]+
 """
 
-from eh.interpreter import Interpreter
+from lla.interpreter import Interpreter
 
 
 def test_main():
