@@ -34,19 +34,19 @@ it becomes incredibly flexible.
 Here's the gist of it:
 
 1. All variables are booleans.
-2. You can't define variables, just pass the interpreter predefined values.
-   a. Or pass the `Interpreter` instance a `dict`, because those are mutable.
+2. You can't define variables in the language itself, but it be provided a
+   `dict` or any object implementing `__getitem__`.
 3. Only fully-resolvable statements are supported.
    a. Anything else raises a Python exception.
-4. You provide the interpreter a single statement and it gets simplified to a single boolean value, which is then return.
+4. You provide the interpreter a single statement and it gets simplified to a single boolean value, which is then returned.
 
 
 ## Dependencies
 
-In theory, this is all you need is Python 3.6+.
+In theory, all you need is Python 3.6+.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/duckinator/snektrace.
+Bug reports and pull requests are welcome on GitHub at https://github.com/duckinator/lla.
 
-The code for snektrace is available under the [MIT License](http://opensource.org/licenses/MIT).
+The code for lla is available under the [MIT License](http://opensource.org/licenses/MIT).
