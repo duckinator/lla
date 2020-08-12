@@ -1,4 +1,4 @@
-# ???
+# lla
 
 Interpreter for a basic logic language, inspired by two-element boolean algebra.
 
@@ -25,6 +25,9 @@ Here's a quick demo, based on the example that prompted its creation:
     Traceback (most recent call last):
         ...
     lla.interpreter.UndefinedVariableException: Undefined variable: undefined_variable
+
+By replacing the `variables` dict with a class implementing `__getitem__`,
+it becomes incredibly flexible.
 
 ## Overview
 
