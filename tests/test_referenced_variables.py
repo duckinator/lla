@@ -1,15 +1,15 @@
 from lla.interpreter import Interpreter
 
 
-def test_main():
+def test_referenced_variables():
     variables = {}
     interpreter = Interpreter(variables)
 
-    variables['ssh'] = True
-    variables['website_up'] = True
-    variables['search'] = False
+    variables['a'] = True
+    variables['b'] = True
+    variables['c'] = False
 
-    assert interpreter.run('!website_up | !search | ssh')
+    assert interpreter.run('!a | !c | b')
 
-    assert interpreter.referenced_variables == {'website_up', 'search'}
-    assert interpreter.last_referenced_variable == 'search'
+    assert interpreter.referenced_variables == {'a', 'c'}
+    assert interpreter.last_referenced_variable == 'c'
