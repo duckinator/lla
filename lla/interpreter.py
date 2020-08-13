@@ -17,8 +17,12 @@ class Interpreter:  # pylint: disable=too-few-public-methods
 
     def __init__(self, variables):
         self.variables = variables
+        self.referenced_variables = set()
+        self.last_referenced_variable = None
 
     def _resolve(self, var):
+        self.referenced_variables.add(var.value)
+        self.last_referenced_variable = var.value
         if not var.value in self.variables:
             raise UndefinedVariableException(var.value)
 
@@ -31,20 +35,14 @@ class Interpreter:  # pylint: disable=too-few-public-methods
         if isinstance(current, bool):
             return current
 
-        if hasattr(current, 'left'):
-            current.left = self._run(current.left)
-
-        if hasattr(current, 'right'):
-            current.right = self._run(current.right)
-
         if current.type == TokenType.STATEMENT:
-            return current.right
+            return self._run(current.right)
         if current.type == TokenType.IDENTIFIER:
             return self._resolve(current)
         if current.operator_type == OperatorType.AND:
-            return current.left and current.right
+            return self._run(current.left) and self._run(current.right)
         if current.operator_type == OperatorType.OR:
-            return current.left or current.right
+            return self._run(current.left) or self._run(current.right)
 
         raise Exception(f'Unhandled object: {current!r}')
 
