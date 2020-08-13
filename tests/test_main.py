@@ -45,5 +45,5 @@ def test_main():
         '!website_up & !search & ssh & !elasticsearch.http & elasticsearch.process'
     )
     assert interpreter.run(
-        'website_up    &    !search'
+        ' website_up    &    !search'
     )
