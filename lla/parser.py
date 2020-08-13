@@ -126,6 +126,6 @@ def parse(code):
     code = re.sub(r'\s+', ' ', code)
     tokens = tokenize(code)
     tree = parse_tokens(tokens)
-    if str(tree) != code:
+    if str(tree) != code.strip():
         raise Exception(f'{str(tree)!r} != {code!r}')
     return tree
